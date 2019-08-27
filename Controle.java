@@ -37,33 +37,38 @@ public class Controle {
     public static int escolherTrocarModoArCondionado(int repetindo,int modoEscolhido) { // saber se quer trocar o modo de opeção do ar
         int escolhaRetorno = 0;
         int escolhaRepeti = 3;
+            if (modoEscolhido != -1) {
+                if (repetindo != 0) { //não é valido para a primeira execução
+                    System.out.println("|  TROCA O MODO DE OPERACAO DO AR-CONDICIONADO   |");
+                    System.out.println("|1 - SIM                                         |");
+                    System.out.println("|0 - NAO                                         |");
+                        
+                        while (escolhaRepeti < -1 || escolhaRepeti > 1) { //repetição para aceitar somente valores validos
+                            System.out.print("\t\t");
+                            escolhaRepeti = Integer.parseInt(System.console().readLine());
+                            if (escolhaRepeti > 1 || escolhaRepeti < 0 )
+                                System.out.println("|   [ERROR] VALOR INVALIDO                       |");
+                        }
 
-            if (repetindo != 0) { //não é valido para a primeira execução
-                System.out.println("|  TROCA O MODO DE OPERACAO DO AR-CONDICIONADO   |");
-                System.out.println("|1 - SIM                                         |");
-                System.out.println("|0 - NAO                                         |");
-                    
-                    while (escolhaRepeti < -1 || escolhaRepeti > 1) { //repetição para aceitar somente valores validos
-                        System.out.print("\t\t");
-                        escolhaRepeti = Integer.parseInt(System.console().readLine());
-                        if (escolhaRepeti > 1 || escolhaRepeti < 0 )
-                            System.out.println("|   [ERROR] VALOR INVALIDO                       |");
-                    }
+                        if (escolhaRepeti == 1){ //se valor 1
+                                escolhaRetorno = trocarModoArCondionado(); //chamo a função para escolher o modo do ar novamente
+                        }else if (escolhaRepeti == 0){ //se valor 0
+                            System.out.println("|        MODO DO AR-CONDIONADO NAO ALTERADO      |"); //mantenho o modo que ja estava
+                            escolhaRetorno = modoEscolhido;
+                        }else if (escolhaRepeti == -1){ //se valor -1 não faço nada e encaminha para a temperatura do controle
+                            escolhaRetorno = -1;
+                        }
 
-                    if (escolhaRepeti == 1){ //se valor 1
-                            escolhaRetorno = trocarModoArCondionado(); //chamo a função para escolher o modo do ar novamente
-                    }else if (escolhaRepeti == 0){ //se valor 0
-                        System.out.println("|        MODO DO AR-CONDIONADO NAO ALTERADO      |"); //mantenho o modo que ja estava
-                        escolhaRetorno = modoEscolhido;
-                    }else if (escolhaRepeti == -1){ //se valor -1 não faço nada e encaminha para a temperatura do controle
-                        escolhaRetorno = -1;
-                    }
-
-            }else { // senão
-                escolhaRetorno = trocarModoArCondionado(); //se for a primeira vez encaminho direto sem perguntar nada
-            }
-        return escolhaRetorno;
+                }else { // senão
+                    escolhaRetorno = trocarModoArCondionado(); //se for a primeira vez encaminho direto sem perguntar nada
+                }
+            return escolhaRetorno;
+        }else {
+            escolhaRetorno = modoEscolhido;
+            return escolhaRetorno;
+        }
     }
+    
 
     public static int mudarTemperaturaControle(int tempControl) {
         int tempFinal = 0;
@@ -105,9 +110,11 @@ public class Controle {
 
         /* PROCESSAMENTO INTERNO SEM INTERRAÇÂO DO USER */
             /*ATRIBUIçÃO DAS CLASSES */
-        escritorio = new ArCondicionado("Eletrolux", "ArtCool", 9000, 638,"Escritorio");
+        escritorio = new ArCondicionado("Eletrolux", "ArtCool", 9000, 1038,"Escritorio");
         sala = new ArCondicionado("Philco", "EcoTurbo", 18000, 5200,"Sala");
         quarto = new ArCondicionado("Samsung", "TurboMaster", 1200, 3510,"Quarto");
+
+        telaBoasVindas(0);
             /**LIGAR OS ARES */
         escritorio.ligaArCondicionado();
         sala.ligaArCondicionado();
@@ -134,8 +141,6 @@ public class Controle {
 
         while(continuarPrograma) {
             
-                telaBoasVindas(interacao);
-            
                 modoOperacao = escolherTrocarModoArCondionado(interacao, modoOperacao);
 
                 valorTemperatura = mudarTemperaturaControle(valorTemperatura);
@@ -157,13 +162,18 @@ public class Controle {
                     sala.desligaArCondicionado();
                     quarto.desligaArCondicionado();
 
+                    escritorio.mostrarConsumo();
+                    sala.mostrarConsumo();
+                    quarto.mostrarConsumo();
+
                 }
                 
-                escritorio.mostrarInformacoes();
-                System.out.println("10x DEPOIS");
+        //        escritorio.mostrarInformacoes();
+         //       System.out.println("10x DEPOIS");
 
                 while (contador < 10  && continuarPrograma) {
-                  //  System.out.println("INTERACAO "+contador+":");
+                    System.out.println("\n|------------------------------------------------|");
+                    System.out.println("INTERACAO "+contador+":");
                     if (modoOperacao == 1){ //automatico
                         escritorio.modoAutomatico();
                         sala.modoAutomatico();
@@ -181,8 +191,9 @@ public class Controle {
 
                     }
                     contador++;
+                    System.out.println("|------------------------------------------------|\n");
                 }
-                escritorio.mostrarInformacoes();
+        //        escritorio.mostrarInformacoes();
             contador=0;
             interacao++;
         }

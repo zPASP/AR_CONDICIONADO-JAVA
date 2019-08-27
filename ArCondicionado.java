@@ -10,6 +10,8 @@ public class ArCondicionado {
     public boolean ventilacao;
     public int temperaturaAmbiente;
     public String local;
+    public int consumoKW;
+    public int interacoes;
     /*ATRIBUTOS */
     
     /*CONSTRUTOR */
@@ -25,6 +27,8 @@ public class ArCondicionado {
         compressor = false;
         ventilacao = false;
         temperaturaAmbiente = 0;
+        consumoKW = 0;
+        interacoes = 0;
     }
 
     /*CONSTRUTOR */
@@ -44,6 +48,7 @@ public class ArCondicionado {
     public void ativaVentilacao () {
         compressor = false;
         ventilacao = true;
+        
     }
 
     public void ativaCompressor () {
@@ -63,37 +68,66 @@ public class ArCondicionado {
         }
     }
 
-    public void alterarTemperaturaControle (int tAlterar) {
+    public void marcarConsumo () {
+        consumoKW++;
+    }
+
+    public int somarConsumo () {
+        int totalConsumo=0;
+        totalConsumo = consumoKW * consumo;
+        return totalConsumo;
+    }
+
+    public void mostrarConsumo () {
+        System.out.println("|------------------------------------------------|");
+        System.out.println("\tAr-condicionado : " + local);
+        System.out.println("\tVezes ativado : " + consumoKW);
+        System.out.println("\tConsumo : " + consumo+" KW(kilowatt)");
+        System.out.println("\tCONSUMO TOTAL = " + somarConsumo()+" KW");
+        System.out.println("|------------------------------------------------|");
+    }
+
+
+    public void alterarTemperaturaControle (int tAlterar) { // metodo interno de teste.
         temperaturaControle = tAlterar;
     }
+
 
     public int aumentaTemperaturaAmbiente () {
         int temperaturaFinal; //crio a veriavel para retorno da temperatura ambiente
         ativaCompressor(); // ligo o compressor
         temperaturaAmbiente++; //compremento +1 na temperatura ambiente
+        marcarConsumo();
         temperaturaFinal = temperaturaAmbiente; // atribuo a temperatura final aumentada ah variavel de retorno
-        if ( temperaturaControle == temperaturaAmbiente ) 
+        if ( temperaturaControle == temperaturaAmbiente ) {
             ativaVentilacao();
-        else 
+        }
+        else {
             ativaCompressor() ; // tratamento para desligar o compressor no momento certo
+        }
         return temperaturaFinal;
+        
     }
 
     public int diminuiTemperaturaAmbiente () {
         int temperaturaFinal;
         ativaCompressor(); // ligo o compressor
         temperaturaAmbiente--; //compremento -1 na temperatura ambiente
+        marcarConsumo();
         temperaturaFinal = temperaturaAmbiente; // atribuo a temperatura final diminuida ah variavel de retorno
-        if ( temperaturaControle == temperaturaAmbiente ) 
+        if ( temperaturaControle == temperaturaAmbiente ) {
             ativaVentilacao() ;
-        else 
+        }
+        else {
             ativaCompressor() ;
+        }
         return temperaturaFinal;
     }
 
 
     public void modoAutomatico () {
         int tempAtual = temperaturaAmbiente;
+        mostrarTemperaturaAmbiente();
         if (tempAtual < temperaturaControle){ // comparo a temperatura ambiente com a temperatura escolhida para o programa saber o que fazer
             aumentaTemperaturaAmbiente(); //compremento +1 na temperatura ambiente
         }else if (tempAtual > temperaturaControle) {
@@ -105,6 +139,7 @@ public class ArCondicionado {
 
     public void modoVerao (){ // esse modo apenas aumenta a temperatura e/ou ventila o ambiente
         int tempAtual = temperaturaAmbiente;
+        mostrarTemperaturaAmbiente();
         if (tempAtual < temperaturaControle){ // comparo a temperatura ambiente com a temperatura escolhida para o programa saber o que fazer
             aumentaTemperaturaAmbiente(); //compremento +1 na temperatura ambiente
         }else {
@@ -115,6 +150,7 @@ public class ArCondicionado {
 
     public void modoInverno () {
         int tempAtual = temperaturaAmbiente;
+        mostrarTemperaturaAmbiente();
         if (tempAtual > temperaturaControle) { // comparo a temperatura ambiente com a temperatura escolhida para o programa saber o que fazer
             diminuiTemperaturaAmbiente();
         }else { // senão
@@ -131,11 +167,17 @@ public class ArCondicionado {
         return tempControle;
     }
 
+    public void mostrarTemperaturaAmbiente () {
+        System.out.println("\t" + local);
+        System.out.println("TEMPERATURA AMBIENTE: " + temperaturaAmbiente);
+        System.out.println("MODO ATIVO : "+ (compressor ? "COMPRESSOR" : "VENTILACAO"));
+    }
+
     public void estadoCompressor () {
         System.out.println("\n COMPRESSOR :" + compressor);
     }
 
-
+    /*METODO PARA CONFIRMAR O FUNCIONAMENTO DAS FUNCOES BASICAS - SEM FUNCIONAMENTO DIRETO NO CONTROLE */
     public void mostrarInformacoes () {
         System.out.println ( "");
         System.out.println (  "\n Status do arcondicionado : " + (ligado ? "LIGADO" : "DESLIGADO"));
@@ -148,6 +190,12 @@ public class ArCondicionado {
         
     }
 
+    public void consumoEnergia () {
+
+    }
+
+
+
 
     public String toString () { // retorno ao chamar apenas a classe sem chamar metodo
         String retorna = "";
@@ -156,8 +204,8 @@ public class ArCondicionado {
         retorna += "\n -----------------------------------------";
         retorna += "\n Marca : " + marca;
         retorna += "\n Modelo : " + modelo;
-        retorna += "\n Potencia : " + potencia;
-        retorna += "\n Consumo : " + consumo;
+        retorna += "\n Potencia : " + potencia + "BTU";
+        retorna += "\n Consumo : " + consumo + " KW";
         retorna += "\n -----------------------------------------";
         retorna += "\n Status do arcondicionado : " + (ligado ? "LIGADO" : "DESLIGADO");
         retorna += "\n Compressor : " + (compressor ? "LIGADO" : "DESLIGADO") ;
