@@ -115,6 +115,7 @@ public class ArCondicionado {
         ativaCompressor(); // ligo o compressor
         temperaturaAmbiente--; //compremento -1 na temperatura ambiente
         marcarConsumo();
+        System.out.println("ESFRIANDO");
         temperaturaFinal = temperaturaAmbiente; // atribuo a temperatura final diminuida ah variavel de retorno
         if ( temperaturaControle == temperaturaAmbiente ) {
             ativaVentilacao() ;
