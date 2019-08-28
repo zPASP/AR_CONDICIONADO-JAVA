@@ -137,20 +137,57 @@ public class Controle {
 
         int modoOperacao = 0;
         int valorTemperatura = sala.mostrarTemperaturaControle();
+        int tempAnterior = 0;
+        int diferecaTemp = 0;
+        boolean aumentarTemp = true;
 
 
         while(continuarPrograma) {
             
                 modoOperacao = escolherTrocarModoArCondionado(interacao, modoOperacao);
 
+                tempAnterior = valorTemperatura;
                 valorTemperatura = mudarTemperaturaControle(valorTemperatura);
-                
-                escritorio.alterarTemperaturaControle(valorTemperatura);
-                sala.alterarTemperaturaControle(valorTemperatura);
-                quarto.alterarTemperaturaControle(valorTemperatura);
 
-                System.out.println("TEMPERATURA CONTROLE: "+ valorTemperatura);
-                System.out.println("MODO DE ESCOLHA: "+modoOperacao);
+                if (valorTemperatura != -1){
+                    if (tempAnterior > valorTemperatura){
+                        diferecaTemp = tempAnterior - valorTemperatura;
+                        aumentarTemp = false;
+                    }else if (tempAnterior < valorTemperatura) {
+                        diferecaTemp = valorTemperatura - tempAnterior;
+                        aumentarTemp = true;
+                    }else {
+                        diferecaTemp = 0;
+                    }
+                }
+
+                if(valorTemperatura != -1){
+                    if (diferecaTemp == 0) {
+                        System.out.println("");
+                        escritorio.alterarTemperaturaControle(valorTemperatura);
+                        sala.alterarTemperaturaControle(valorTemperatura);
+                        quarto.alterarTemperaturaControle(valorTemperatura);
+                    } 
+                    if(aumentarTemp) {
+                        for (int i = 0; i < diferecaTemp; i++){
+                            System.out.println("AUMENTANDO TEMPERATURA DO CONTROLE: "+ (escritorio.mostrarTemperaturaControle()+1));
+                            escritorio.aumentaTemperaturaControle();
+                            sala.aumentaTemperaturaControle();
+                            quarto.aumentaTemperaturaControle();
+                        }
+                    }else if(!aumentarTemp) {
+                        for (int i = 0; i < diferecaTemp; i++) {
+                            System.out.println("DIMINUINDO TEMPERATURA DO CONTROLE: "+ (escritorio.mostrarTemperaturaControle()-1));
+                            escritorio.diminuiTemperaturaControle();
+                            sala.diminuiTemperaturaControle();
+                            quarto.diminuiTemperaturaControle();
+                        }
+                    }
+                }
+
+
+                //System.out.println("TEMPERATURA CONTROLE: "+ valorTemperatura);
+                //System.out.println("MODO DE ESCOLHA: "+modoOperacao);
 
                 if (valorTemperatura == -1 || modoOperacao == -1){
                     System.out.println("|------------------------------------------------|");
@@ -168,12 +205,12 @@ public class Controle {
 
                 }
                 
-        //        escritorio.mostrarInformacoes();
+         //      escritorio.mostrarInformacoes();
          //       System.out.println("10x DEPOIS");
 
                 while (contador < 10  && continuarPrograma) {
                     System.out.println("\n|------------------------------------------------|");
-                    System.out.println("INTERACAO "+contador+":");
+                   // System.out.println("INTERACAO "+contador+":");
                     if (modoOperacao == 1){ //automatico
                         escritorio.modoAutomatico();
                         sala.modoAutomatico();

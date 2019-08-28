@@ -74,7 +74,7 @@ public class ArCondicionado {
 
     public int somarConsumo () {
         int totalConsumo=0;
-        totalConsumo = consumoKW * consumo;
+        totalConsumo = (consumoKW * consumo)/1000;
         return totalConsumo;
     }
 
@@ -82,7 +82,7 @@ public class ArCondicionado {
         System.out.println("|------------------------------------------------|");
         System.out.println("\tAr-condicionado : " + local);
         System.out.println("\tVezes ativado : " + consumoKW);
-        System.out.println("\tConsumo : " + consumo+" KW(kilowatt)");
+        System.out.println("\tConsumo : " + consumo+" W");
         System.out.println("\tCONSUMO TOTAL = " + somarConsumo()+" KW");
         System.out.println("|------------------------------------------------|");
     }
@@ -98,6 +98,7 @@ public class ArCondicionado {
         ativaCompressor(); // ligo o compressor
         temperaturaAmbiente++; //compremento +1 na temperatura ambiente
         marcarConsumo();
+        System.out.println("\tAQUECENDO");
         temperaturaFinal = temperaturaAmbiente; // atribuo a temperatura final aumentada ah variavel de retorno
         if ( temperaturaControle == temperaturaAmbiente ) {
             ativaVentilacao();
@@ -205,7 +206,7 @@ public class ArCondicionado {
         retorna += "\n Marca : " + marca;
         retorna += "\n Modelo : " + modelo;
         retorna += "\n Potencia : " + potencia + "BTU";
-        retorna += "\n Consumo : " + consumo + " KW";
+        retorna += "\n Consumo : " + consumo + " W";
         retorna += "\n -----------------------------------------";
         retorna += "\n Status do arcondicionado : " + (ligado ? "LIGADO" : "DESLIGADO");
         retorna += "\n Compressor : " + (compressor ? "LIGADO" : "DESLIGADO") ;
